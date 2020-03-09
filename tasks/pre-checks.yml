@@ -1,0 +1,23 @@
+---
+
+- name: Check where bash is installed
+  command: which bash
+  register: hugo_check_bash_path
+  failed_when: false
+  changed_when: false
+
+- name: Check for existing hugo binary
+  stat:
+    path: "{{ hugo_install_dir }}/hugo"
+  register: hugo_check_existing
+
+- name: Check hugo binary version if binary already exists
+  shell: >
+    set -o pipefail && \
+      {{ hugo_install_dir }}/hugo version | \
+      sed -E 's/.*v([[:digit:].]+).*/\1/'
+  args:
+    executable: "{{ hugo_check_bash_path.stdout_lines[0] }}"
+  changed_when: false
+  register: hugo_check_existing_version
+  when: hugo_check_existing.stat.exists

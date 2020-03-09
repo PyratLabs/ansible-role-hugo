@@ -1,0 +1,20 @@
+---
+
+- import_tasks: pre-checks.yml
+
+- include_tasks: "{{ ansible_os_family | lower }}/install-os-dependencies.yml"
+  when: hugo_install_os_dependencies is defined
+        and hugo_install_os_dependencies
+
+- import_tasks: get-version.yml
+  when: hugo_version is not defined or not hugo_version
+
+- import_tasks: download-hugo.yml
+
+- import_tasks: install-hugo.yml
+
+- import_tasks: download-projects.yml
+  when: go_projects is defined
+        and go_projects | length >= 1
+
+- import_tasks: post-checks.yml

@@ -1,0 +1,37 @@
+---
+
+hugo_arch_lookup:
+  i386:
+    arch: 386
+    suffix: "32bit"
+  x86:
+    arch: 386
+    suffix: "32bit"
+  amd64:
+    arch: amd64
+    suffix: "64bit"
+  x86_64:
+    arch: amd64
+    suffix: "64bit"
+  arm64:
+    arch: arm64
+    suffix: "ARM64"
+  aarch64:
+    arch: arm64
+    suffix: "ARM64"
+  arm:
+    arch: arm
+    suffix: "ARM"
+  arm7:
+    arch: arm
+    suffix: "ARM"
+  armv7l:
+    arch: arm
+    suffix: "ARM"
+  armhf:
+    arch: arm
+    suffix: "ARM"
+
+hugo_github_url: https://github.com/gohugoio/hugo
+hugo_github_api: https://api.github.com/repos/gohugoio/hugo
+hugo_github_download_url: "{{ hugo_github_url }}/releases/download"

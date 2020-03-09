@@ -1,0 +1,50 @@
+---
+
+- name: Ensure hugo_install_dir exists
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ hugo_install_dir }}"
+    - "/tmp/hugo-{{ hugo_version }}"
+
+- name: Ensure hugo_projects_dir exists
+  file:
+    path: "{{ hugo_projects_dir }}"
+    state: directory
+  when: hugo_projects_dir is defined and hugo_projects_dir
+
+- name: Ensure existing Hugo package is moved to keep an copy of the old version
+  command: >
+      mv {{ hugo_install_dir }}/hugo
+      {{ hugo_install_dir }}/hugo-{{ hugo_check_existing_version.stdout_lines[0] }}
+  when:
+    hugo_check_existing.stat.islnk is defined
+    and not hugo_check_existing.stat.islnk
+    and hugo_check_existing_version.stdout_lines[0] != hugo_version
+
+- name: Ensure Hugo archive is extracted to temporary directory
+  unarchive:
+    src: "/tmp/hugo-{{ hugo_version }}.tar.gz"
+    dest: "/tmp/hugo-{{ hugo_version }}"
+    remote_src: true
+    mode: 0755
+  when: not hugo_check_existing.stat.exists
+        or (hugo_check_existing.stat.exists
+            and hugo_check_existing_version.stdout_lines[0] != hugo_version)
+
+- name: Ensure Hugo binary is copied to the installation directory
+  copy:
+    src: "/tmp/hugo-{{ hugo_version }}/hugo"
+    dest: "{{ hugo_install_dir }}/hugo-{{ hugo_version }}"
+    remote_src: true
+    mode: 0755
+  when: not hugo_check_existing.stat.exists
+        or (hugo_check_existing.stat.exists
+            and hugo_check_existing_version.stdout_lines[0] != hugo_version)
+
+- name: Ensure Hugo package is symlinked
+  file:
+    src: "{{ hugo_install_dir }}/hugo-{{ hugo_version }}"
+    dest: "{{ hugo_install_dir }}/hugo"
+    state: link

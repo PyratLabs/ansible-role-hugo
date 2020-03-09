@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    hugo_install_dir: /usr/local/bin
+  roles:
+    - role: xanmanning.hugo

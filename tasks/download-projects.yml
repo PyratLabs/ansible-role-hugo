@@ -1,0 +1,15 @@
+---
+
+- name: Ensure projects are cloned using git
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ hugo_projects_dir }}/{{ item.name | default(item.repo | basename | regex_replace('.git$')) }}"
+    version: "{{ item.version | default('master') }}"
+    force: "{{ item.force | default(omit) }}"
+    key_file: "{{ item.key_file | default(omit) }}"
+    recursive: "{{ item.recursive | default(omit) }}"
+    update: "{{ item.update_repo | default(omit) }}"
+    ssh_opts: "{{ item.ssh_opts | default(omit) }}"
+    bare: "{{ item.bare | default(omit) }}"
+    depth: "{{ item.depth | default(omit) }}"
+  loop: "{{ hugo_projects }}"

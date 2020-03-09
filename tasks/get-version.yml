@@ -1,0 +1,12 @@
+---
+
+- name: Get the version information of the latest release of Hugo
+  uri:
+    url: "{{ hugo_github_api }}/releases/latest"
+    return_content: true
+    body_format: json
+  register: hugo_get_latest_version
+
+- name: Ensure the hugo_version variable is set
+  set_fact:
+    hugo_version: "{{ hugo_get_latest_version.json.tag_name | regex_replace('^v', '') }}"

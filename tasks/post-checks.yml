@@ -1,0 +1,32 @@
+---
+
+- name: Check the state of the new Hugo package
+  stat:
+    path: "{{ hugo_install_dir }}/hugo"
+  register: hugo_check_installed
+
+- name: Fail play if Hugo is not installed as expected
+  assert:
+    that:
+      - hugo_check_installed.stat.exists
+      - hugo_check_installed.stat.islnk
+    fail_msg: hugo was not installed as expected, it is likely something went wrong.
+    success_msg: hugo has been installed as expected.
+
+- name: Check the Hugo binary version matches the expected version
+  shell: >
+    set -o pipefail && \
+      {{ hugo_install_dir }}/hugo version | \
+      sed -E 's/.*v([[:digit:].]+).*/\1/'
+  args:
+    executable: "{{ hugo_check_bash_path.stdout_lines[0] }}"
+  changed_when: false
+  failed_when: false
+  register: hugo_check_installed_version
+
+- name: Fail play if Hugo is not the expected version
+  assert:
+    that:
+      - hugo_check_installed_version.stdout_lines[0] == hugo_version
+    fail_msg: Installed hugo version is not as expected, it is likely something went wrong.
+    success_msg: Installed hugo version is as expected.

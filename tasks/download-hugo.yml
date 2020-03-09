@@ -1,0 +1,16 @@
+---
+
+- name: Ensure target host architecture information is set as a fact
+  set_fact:
+    hugo_arch: "{{ hugo_arch_lookup[ansible_architecture].arch }}"
+    hugo_arch_suffix: "{{ hugo_arch_lookup[ansible_architecture].suffix }}"
+
+- name: Get the archive path for hugo
+  set_fact:
+    hugo_archive_path: "v{{ hugo_version }}/hugo_{{ hugo_version }}_Linux-{{ hugo_arch_suffix }}.tar.gz"
+
+- name: Ensure hugo archive is downloaded
+  get_url:
+    url: "{{ hugo_github_download_url }}/{{ hugo_archive_path }}"
+    dest: "/tmp/hugo-{{ hugo_version }}.tar.gz"
+    mode: 0600

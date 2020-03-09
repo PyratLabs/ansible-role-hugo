@@ -1,0 +1,16 @@
+---
+
+- name: Prepare containers for local-user install testing
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure a user group exists
+      group:
+        name: user
+        state: present
+
+    - name: Ensure a normal user exists
+      user:
+        name: hugouser
+        group: user
+        state: present

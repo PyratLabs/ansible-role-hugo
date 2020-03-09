@@ -1,0 +1,16 @@
+---
+
+# Use a specific version of Hugo, eg. `0.66.0`. Specify `false` for latest.
+hugo_version: false
+
+# Allow role to install OS dependencies.
+hugo_install_os_dependencies: false
+
+# Installation directory for Hugo.
+hugo_install_dir: "{{ ansible_user_dir }}/bin"
+
+# Directory to put Hugo projects. Specify `false` to skip.
+hugo_projects_dir: "{{ ansible_user_dir }}/projects"
+
+# List of Hugo projects to be cloned with `git`. See notes in README.md
+# hugo_projects: []
