@@ -4,5 +4,12 @@
   hosts: all
   become: true
   tasks:
-    - debug:
-        msg: "No preparation steps required."
+    - name: Ensure apt cache is updated
+      apt:
+        update_cache: true
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Ensure tar is installed
+      package:
+        name: tar
+        state: present

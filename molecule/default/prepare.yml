@@ -14,3 +14,13 @@
         name: hugouser
         group: user
         state: present
+
+    - name: Ensure apt cache is updated
+      apt:
+        update_cache: true
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Ensure tar is installed
+      package:
+        name: tar
+        state: present
